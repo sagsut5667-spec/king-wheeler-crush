@@ -7,106 +7,97 @@
 <title>KING WHEELER CRUSH</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#111;color:white;font-family:Arial}
+body{margin:0;overflow:hidden;background:#111;color:white;font-family:Arial,sans-serif;touch-action:none}
 #game{position:fixed;inset:0}
-canvas{display:block}
-button{background:#263c48;color:white;border:1px solid #91aab6;border-radius:9px;padding:9px;font-weight:bold;font-size:12px;touch-action:manipulation}
-button.active{background:#a86a05;border-color:#ffe083}
-#hud{position:fixed;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none;gap:5px}
-.pill{background:#101820df;padding:9px;border-radius:9px;font-size:13px;font-weight:bold}
-#garage{position:fixed;inset:0;background:linear-gradient(140deg,#06141df5,#17452ff5);display:flex;align-items:center;justify-content:center;padding:8px;overflow:auto}
-.panel{width:min(850px,100%);max-height:97%;overflow:auto;background:#0b171ef5;border:1px solid #738b97;border-radius:15px;padding:12px}
-h1{color:#ffcf32;margin:0;font-size:clamp(24px,5vw,38px)}
-h2{font-size:14px;color:#ffe08b;margin:10px 0 6px}
-.note{font-size:11px;color:#c6d1d6;margin:5px 0}
-.group{border-top:1px solid #ffffff25;padding-top:5px;margin-top:7px}
-.buttons{display:flex;flex-wrap:wrap;gap:6px}
-label{display:block;font-size:12px;margin:6px 0 2px}
-input[type=range]{width:min(240px,100%);accent-color:#ffcf32}
-#start{background:linear-gradient(120deg,#ffd52e,#ed7800);color:#17120a;font-size:17px;padding:13px 24px;margin-top:12px}
-#controls{position:fixed;bottom:12px;left:12px;right:12px;display:none;justify-content:space-between;pointer-events:none}
-.pad{display:grid;grid-template-columns:repeat(2,52px);gap:6px;pointer-events:auto}
-.drive{width:52px;height:52px;padding:0;font-size:22px;background:#101c24dc;border:2px solid #ffffffaa}
-#airControls{position:fixed;right:12px;bottom:12px;display:none;flex-direction:column;gap:7px}
-#tools{position:fixed;right:8px;top:58px;display:none;flex-direction:column;gap:5px}
-#warning{position:fixed;top:22%;left:50%;transform:translateX(-50%);background:#c90000ed;color:white;border:3px solid #ffe000;border-radius:12px;padding:13px 18px;font-size:20px;font-weight:900;display:none;animation:flash .35s infinite alternate;z-index:10;white-space:nowrap}
-@keyframes flash{to{opacity:.45;transform:translateX(-50%) scale(1.08)}}
-#msg{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%);font-size:28px;color:#ffe16c;font-weight:900}
-#sound{position:fixed;left:8px;top:58px;display:none;gap:5px;flex-direction:column}
-@media(max-width:500px){.panel{padding:9px}.drive{width:48px;height:48px}.pad{grid-template-columns:repeat(2,48px)}}
+#top{position:fixed;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;align-items:center;gap:5px;z-index:5;pointer-events:none}
+.panel{background:#111c;padding:8px 10px;border:1px solid #ffffff55;border-radius:10px;pointer-events:auto}
+button,select{background:#f2a900;color:#111;border:0;border-radius:8px;padding:9px;font-weight:bold;margin:2px}
+button:active{background:#fff}
+#garage{position:fixed;inset:0;background:#101820f2;z-index:10;overflow:auto;padding:15px;text-align:center}
+h1{color:#ffbd22;margin:8px}
+h2{font-size:18px}
+.group{background:#ffffff12;border:1px solid #ffffff33;border-radius:12px;padding:10px;margin:9px auto;max-width:650px}
+.options{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}
+.options button{background:#ddd;color:#111}
+.options button.active{background:#ffb900}
+#start{font-size:20px;padding:14px 35px;background:#20d36b}
+#controls{position:fixed;bottom:12px;left:0;right:0;text-align:center;z-index:4;pointer-events:none}
+#touchHint{display:inline-block;background:#111a;padding:8px 12px;border-radius:12px;font-size:13px}
+#warning{position:fixed;top:65px;left:50%;transform:translateX(-50%);color:#ff3333;font-size:22px;font-weight:bold;z-index:6;display:none;text-shadow:0 0 10px red}
+#message{position:fixed;top:110px;left:50%;transform:translateX(-50%);background:#111c;padding:8px;border-radius:8px;z-index:6;display:none}
+#bottom{position:fixed;bottom:10px;right:8px;z-index:7}
+#bottom button{background:#222;color:white;border:1px solid #fff}
+#hud{position:fixed;top:58px;left:8px;z-index:5;background:#111b;padding:7px;border-radius:8px;font-size:14px}
+#touchArea{position:fixed;inset:100px 0 0 0;z-index:2;touch-action:none;display:none}
+#musicBtn{background:#20c878}
 </style>
 </head>
 <body>
 <div id="game"></div>
-<div id="hud">
- <div class="pill">👑 KING WHEELER CRUSH</div>
- <div class="pill">🏆 <span id="score">0</span> | <span id="speed">0</span> km/h</div>
-</div>
-<div id="warning">🚨 DANGER! धोका पुढे!</div>
-<div id="msg"></div>
 
-<div id="tools">
- <button id="cameraBtn">📷 मागून</button>
- <button id="rearBtn">↩ मागील दृश्य</button>
- <button id="garageBtn">🔧 गॅरेज</button>
-</div>
-<div id="sound">
- <button id="musicBtn">🎵 MUSIC ON</button>
- <button id="volumeBtn">🔊 आवाज</button>
-</div>
-
-<div id="controls">
- <div class="pad">
-  <button class="drive" data-k="left">◀</button>
-  <button class="drive" data-k="right">▶</button>
- </div>
- <div class="pad">
-  <button class="drive" data-k="reverse">▼</button>
-  <button class="drive" data-k="forward">▲</button>
+<div id="top">
+ <div class="panel"><b>👑 KING WHEELER CRUSH</b></div>
+ <div class="panel">
+  <select id="language" aria-label="Language">
+   <option value="mr">मराठी</option>
+   <option value="hi">हिंदी</option>
+   <option value="en">English</option>
+  </select>
  </div>
 </div>
-<div id="airControls">
- <button class="drive" data-k="up">⬆️ उंच</button>
- <button class="drive" data-k="down">⬇️ खाली</button>
+
+<div id="hud">🚗 <span id="speed">0</span> km/h</div>
+<div id="warning">⚠️ DANGER!</div>
+<div id="message"></div>
+<div id="touchArea"></div>
+<div id="controls"><span id="touchHint">बोटाने स्क्रीनवर ड्रॅग करून वाहन चालवा</span></div>
+<div id="bottom">
+ <button id="musicBtn">🎵 Music ON</button>
+ <button id="cameraBtn">📷 Camera</button>
+ <button id="garageBtn">🏠 Garage</button>
 </div>
 
 <div id="garage">
- <div class="panel">
-  <h1>KING WHEELER CRUSH</h1>
-  <div class="note">3D ड्रायव्हिंग • ट्रॅक्टर • वाहने • विमान • हेलिकॉप्टर</div>
+ <h1>👑 KING WHEELER CRUSH</h1>
+ <p id="subtitle">तुमचे वाहन निवडा आणि गेम सुरू करा!</p>
 
-  <div class="group">
-   <h2>🚜 वाहन निवडा</h2>
-   <div class="buttons" id="vehicles"></div>
+ <div class="group">
+  <h2 id="langTitle">🌐 भाषा निवडा</h2>
+  <div class="options">
+   <button onclick="setLang('mr')">मराठी</button>
+   <button onclick="setLang('hi')">हिंदी</button>
+   <button onclick="setLang('en')">English</button>
   </div>
-  <div class="group">
-   <h2>🎨 रंग</h2>
-   <div class="buttons" id="colors"></div>
-  </div>
-  <div class="group">
-   <h2>🔩 अवजारे</h2>
-   <div class="buttons" id="attachments"></div>
-  </div>
-  <div class="group">
-   <h2>🛞 टायर डिझाइन</h2>
-   <div class="buttons" id="tires"></div>
-  </div>
-  <div class="group">
-   <h2>🌍 वातावरण</h2>
-   <div class="buttons" id="worlds"></div>
-  </div>
-  <div class="group">
-   <h2>⚙️ कस्टमायझेशन</h2>
-   <label>वाहन आकार: <b id="sizeText">100%</b></label>
-   <input id="size" type="range" min="75" max="130" value="100">
-   <label>वेग: <b id="powerText">100%</b></label>
-   <input id="power" type="range" min="60" max="160" value="100">
-   <label>टायर आकार: <b id="wheelText">100%</b></label>
-   <input id="wheel" type="range" min="70" max="145" value="100">
-  </div>
-  <button id="start">▶ गेम सुरू करा</button>
-  <div class="note">आकाशातील वाहनांसाठी उंच-खाली बटणेही दिसतील. म्युझिक सुरू करण्यासाठी गेम सुरू करा.</div>
  </div>
+
+ <div class="group">
+  <h2 id="vehicleTitle">🚜 वाहन निवडा</h2>
+  <div class="options" id="vehicles"></div>
+ </div>
+
+ <div class="group">
+  <h2 id="colorTitle">🎨 रंग निवडा</h2>
+  <div class="options" id="colors"></div>
+ </div>
+
+ <div class="group">
+  <h2 id="worldTitle">🌍 वातावरण निवडा</h2>
+  <div class="options" id="worlds"></div>
+ </div>
+
+ <div class="group">
+  <h2 id="toolTitle">🛠️ अवजारे निवडा</h2>
+  <div class="options" id="tools"></div>
+ </div>
+
+ <div class="group">
+  <h2 id="musicTitle">🎵 संगीत</h2>
+  <button id="garageMusic">🎵 Music ON</button>
+  <p id="musicNote">गेम सुरू केल्यानंतर संगीत सुरू होईल.</p>
+ </div>
+
+ <button id="start">▶ START GAME</button>
+ <p id="instructions">बोटाने स्क्रीनवर ड्रॅग करा: डावीकडे/उजवीकडे वळा, वर पुढे जा, खाली मागे या.</p>
 </div>
 
 <script type="importmap">
@@ -117,389 +108,285 @@ input[type=range]{width:min(240px,100%);accent-color:#ffcf32}
 import * as THREE from 'three';
 
 const $=id=>document.getElementById(id);
-const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,600);
-const renderer=new THREE.WebGLRenderer({antialias:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(innerWidth,innerHeight);
-renderer.shadowMap.enabled=true;
-$('game').appendChild(renderer.domElement);
+let lang='mr',vehicle='ट्रॅक्टर',color='#e6a500',world='गाव',tool='नाही';
+let scene,camera,renderer,player,wheels=[],obstacles=[],clouds=[];
+let playing=false,speed=0,steer=0,altitude=0,camMode=0;
+let musicOn=true,audioCtx,masterGain,musicTimer,engineOsc,engineGain;
+let lastTime=0,warningTimer=0;
+const isAir=()=>vehicle==='विमान'||vehicle==='हेलिकॉप्टर';
 
-scene.add(new THREE.HemisphereLight(0xe5f5ff,0x526044,2));
-const sun=new THREE.DirectionalLight(0xffffff,2);
-sun.position.set(-20,35,20);
-sun.castShadow=true;
-scene.add(sun);
+const words={
+mr:{
+subtitle:'तुमचे वाहन निवडा आणि गेम सुरू करा!',vehicle:'🚜 वाहन निवडा',color:'🎨 रंग निवडा',world:'🌍 वातावरण निवडा',tool:'🛠️ अवजारे निवडा',start:'▶ गेम सुरू करा',music:'🎵 संगीत ON',musicOff:'🔇 संगीत OFF',hint:'बोटाने स्क्रीनवर ड्रॅग करून वाहन चालवा',instruction:'बोटाने स्क्रीनवर ड्रॅग करा: डावीकडे/उजवीकडे वळा, वर पुढे जा, खाली मागे या.',danger:'⚠️ धोका! समोर अडथळा आहे!',crash:'💥 धडक झाली!',ready:'गेम सुरू झाला!',garage:'🏠 गॅरेज',camera:'📷 कॅमेरा',vehicles:['ट्रॅक्टर','बाईक','स्कूटर','कार','जीप','ट्रक','रोड रोलर','JCB','ट्रेन','विमान','हेलिकॉप्टर'],worlds:['गाव','जंगल','डोंगर','समुद्रकिनारा','हायवे','आकाश'],tools:['नाही','ट्रॉली','नांगर','कल्टिव्हेटर','लोडर']
+},
+hi:{
+subtitle:'अपना वाहन चुनें और गेम शुरू करें!',vehicle:'🚜 वाहन चुनें',color:'🎨 रंग चुनें',world:'🌍 वातावरण चुनें',tool:'🛠️ उपकरण चुनें',start:'▶ गेम शुरू करें',music:'🎵 संगीत ON',musicOff:'🔇 संगीत OFF',hint:'उंगली से स्क्रीन पर ड्रैग करके वाहन चलाएं',instruction:'स्क्रीन पर उंगली से ड्रैग करें: बाएं/दाएं मुड़ें, ऊपर आगे जाएं, नीचे पीछे आएं।',danger:'⚠️ खतरा! सामने बाधा है!',crash:'💥 टक्कर हुई!',ready:'गेम शुरू हो गया!',garage:'🏠 गैरेज',camera:'📷 कैमरा',vehicles:['ट्रैक्टर','बाइक','स्कूटर','कार','जीप','ट्रक','रोड रोलर','JCB','ट्रेन','विमान','हेलीकॉप्टर'],worlds:['गांव','जंगल','पहाड़','समुद्र तट','हाईवे','आकाश'],tools:['नहीं','ट्रॉली','हल','कल्टीवेटर','लोडर']
+},
+en:{
+subtitle:'Choose your vehicle and start the game!',vehicle:'🚜 Choose Vehicle',color:'🎨 Choose Color',world:'🌍 Choose Environment',tool:'🛠️ Choose Attachments',start:'▶ START GAME',music:'🎵 Music ON',musicOff:'🔇 Music OFF',hint:'Drag your finger on the screen to drive',instruction:'Drag on screen: left/right to steer, up to accelerate, down to reverse.',danger:'⚠️ DANGER! Obstacle ahead!',crash:'💥 CRASH!',ready:'Game started!',garage:'🏠 Garage',camera:'📷 Camera',vehicles:['Tractor','Bike','Scooter','Car','Jeep','Truck','Road Roller','JCB','Train','Airplane','Helicopter'],worlds:['Village','Jungle','Mountain','Beach','Highway','Sky'],tools:['None','Trailer','Plough','Cultivator','Loader']
+}
+};
+const vehicleNames=['ट्रॅक्टर','बाईक','स्कूटर','कार','जीप','ट्रक','रोड रोलर','JCB','ट्रेन','विमान','हेलिकॉप्टर'];
+const worldNames=['गाव','जंगल','डोंगर','समुद्रकिनारा','हायवे','आकाश'];
+const toolNames=['नाही','ट्रॉली','नांगर','कल्टिव्हेटर','लोडर'];
+const colorList=[['पिवळा','#e6a500'],['लाल','#d62828'],['निळा','#1677dd'],['हिरवा','#229944'],['काळा','#222222'],['पांढरा','#eeeeee']];
 
-const material=(c,r=.8)=>new THREE.MeshStandardMaterial({color:c,roughness:r});
-const colors=[['पिवळा',0xffc928],['लाल',0xd92d24],['निळा',0x1976d2],['हिरवा',0x229447],['काळा',0x20252b],['नारिंगी',0xf07816]];
-const vehicles=['ट्रॅक्टर क्लासिक','ट्रॅक्टर मॉडर्न','ट्रॅक्टर हेवी','ट्रॅक्टर कॉम्पॅक्ट','बाईक','स्कूटर','कार','जीप','ट्रक','रोड रोलर','JCB','ट्रेन','विमान','हेलिकॉप्टर'];
-const attachments=['काही नाही','ट्रॉली','नांगर','कल्टिव्हेटर','रोटाव्हेटर','फ्रंट लोडर'];
-const worlds=['गाव','जंगल','डोंगर','समुद्रकिनारा','हायवे','धबधबा','आकाश'];
-
-let vehicle=vehicles[0],paint=colors[0][1],attachment=attachments[0],tire='खोल ग्रिप',environment='गाव';
-let size=1,power=1,wheelSize=1;
-let car=null,bodyMat=null,wheels=[],worldObjects=[],obstacles=[];
-let playing=false,air=false,velocity=0,points=0,altitude=0;
-let cameraMode='chase',rear=false;
-const keys={left:false,right:false,forward:false,reverse:false,up:false,down:false};
-
-function addButtonGroup(id,items,current,select){
- const root=$(id);root.innerHTML='';
- items.forEach(item=>{
-  const b=document.createElement('button');
-  b.textContent=Array.isArray(item)?item[0]:item;
-  if((Array.isArray(item)?item[1]:item)===current)b.classList.add('active');
-  b.onclick=()=>{
-   select(item);
-   [...root.children].forEach(x=>x.classList.remove('active'));
-   b.classList.add('active');
-  };
-  root.appendChild(b);
+function makeButtons(id,items,selected,callback){
+ $(id).innerHTML='';
+ items.forEach((item,i)=>{
+  const b=document.createElement('button');b.textContent=item;
+  if(item===selected)b.classList.add('active');
+  b.onclick=()=>{callback(item,i);[...$(id).children].forEach(x=>x.classList.remove('active'));b.classList.add('active')};
+  $(id).appendChild(b);
  });
 }
-function box(parent,w,h,d,mat,x,y,z){
- const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
- o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;
- parent.add(o);return o;
+function setLang(v){
+ lang=v;$('language').value=v;
+ const w=words[v];
+ $('subtitle').textContent=w.subtitle;$('vehicleTitle').textContent=w.vehicle;
+ $('colorTitle').textContent=w.color;$('worldTitle').textContent=w.world;
+ $('toolTitle').textContent=w.tool;$('start').textContent=w.start;
+ $('touchHint').textContent=w.hint;$('instructions').textContent=w.instruction;
+ $('garageMusic').textContent=musicOn?w.music:w.musicOff;
+ $('musicBtn').textContent=musicOn?w.music:w.musicOff;
+ $('cameraBtn').textContent=w.camera;$('garageBtn').textContent=w.garage;
+ makeButtons('vehicles',w.vehicles,w.vehicles[vehicleNames.indexOf(vehicle)]||w.vehicles[0],(x,i)=>vehicle=vehicleNames[i]);
+ makeButtons('worlds',w.worlds,w.worlds[worldNames.indexOf(world)]||w.worlds[0],(x,i)=>world=worldNames[i]);
+ makeButtons('tools',w.tools,w.tools[toolNames.indexOf(tool)]||w.tools[0],(x,i)=>tool=toolNames[i]);
 }
-function clearVehicle(){if(car)scene.remove(car);wheels=[]}
+$('language').onchange=e=>setLang(e.target.value);
+makeButtons('vehicles',words.mr.vehicles,words.mr.vehicles[0],(x,i)=>vehicle=vehicleNames[i]);
+makeButtons('worlds',words.mr.worlds,words.mr.worlds[0],(x,i)=>world=worldNames[i]);
+makeButtons('tools',words.mr.tools,words.mr.tools[0],(x,i)=>tool=toolNames[i]);
+makeButtons('colors',colorList.map(x=>x[0]),'पिवळा',(x,i)=>color=colorList[i][1]);
+
+function init3D(){
+ scene=new THREE.Scene();
+ scene.background=new THREE.Color(world==='आकाश'?'#69b9ee':'#8bc9ef');
+ scene.fog=new THREE.Fog(scene.background,70,240);
+ camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,700);
+ renderer=new THREE.WebGLRenderer({antialias:true});
+ renderer.setSize(innerWidth,innerHeight);
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ renderer.shadowMap.enabled=true;
+ $('game').innerHTML='';$('game').appendChild(renderer.domElement);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x667744,2));
+ const sun=new THREE.DirectionalLight(0xffffff,2.3);sun.position.set(-30,60,30);sun.castShadow=true;scene.add(sun);
+ const groundColor=world==='समुद्रकिनारा'?0xd8c18b:world==='आकाश'?0x83cafa:world==='जंगल'?0x276b31:0x63883d;
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(600,600),new THREE.MeshStandardMaterial({color:groundColor}));
+ ground.rotation.x=-Math.PI/2;ground.position.y=-.1;ground.receiveShadow=true;scene.add(ground);
+ const road=new THREE.Mesh(new THREE.PlaneGeometry(13,600),new THREE.MeshStandardMaterial({color:0x444444}));
+ road.rotation.x=-Math.PI/2;road.position.y=.02;scene.add(road);
+ for(let z=-280;z<280;z+=15){
+  const line=new THREE.Mesh(new THREE.BoxGeometry(.18,.04,6),new THREE.MeshStandardMaterial({color:0xffffff}));
+  line.position.set(0,.06,z);scene.add(line);
+ }
+ addEnvironment();
+ player=makeVehicle();
+ player.position.set(0,isAir()?22:0,-8);scene.add(player);
+ if(isAir())altitude=22;else altitude=0;
+ obstacles=[];
+ for(let i=0;i<24;i++){
+  const obj=new THREE.Mesh(new THREE.BoxGeometry(2,2,2),new THREE.MeshStandardMaterial({color:i%2?0xd33b25:0x333333}));
+  obj.position.set((Math.random()-.5)*10,1,-35-i*18);scene.add(obj);obstacles.push(obj);
+ }
+}
+
+function addEnvironment(){
+ for(let i=0;i<65;i++){
+  const x=(Math.random()-.5)*170,z=-Math.random()*500;
+  if(Math.abs(x)<10)continue;
+  if(world==='आकाश'){
+   const cloud=new THREE.Group();
+   for(let j=0;j<5;j++){
+    const c=new THREE.Mesh(new THREE.SphereGeometry(2+Math.random()*2,10,8),new THREE.MeshStandardMaterial({color:0xffffff}));
+    c.position.set(j*2,Math.random()*2,0);cloud.add(c);
+   }
+   cloud.position.set(x,18+Math.random()*40,z);scene.add(cloud);clouds.push(cloud);
+  }else{
+   const tree=new THREE.Group();
+   const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.3,.5,3,7),new THREE.MeshStandardMaterial({color:0x704321}));
+   trunk.position.y=1.5;tree.add(trunk);
+   const leaves=new THREE.Mesh(new THREE.ConeGeometry(2.2,5,8),new THREE.MeshStandardMaterial({color:world==='जंगल'?0x145b26:0x267c31}));
+   leaves.position.y=5;tree.add(leaves);tree.position.set(x,0,z);scene.add(tree);
+  }
+ }
+}
+
+function box(parent,w,h,d,x,y,z,c){
+ const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color:c}));
+ m.position.set(x,y,z);m.castShadow=true;parent.add(m);return m;
+}
 function makeVehicle(){
- clearVehicle();
- car=new THREE.Group();scene.add(car);
- bodyMat=material(paint,.4);
- const isTractor=vehicle.startsWith('ट्रॅक्टर');
- const isBike=['बाईक','स्कूटर'].includes(vehicle);
- air=['विमान','हेलिकॉप्टर'].includes(vehicle);
- const W=isBike?.65:isTractor?1.9:2;
- const L=isBike?1.8:isTractor?3:3.3;
-
+ const g=new THREE.Group(),bodyColor=new THREE.Color(color);
+ const body=box(g,vehicle==='ट्रक'?3.5:2.3,1.1,4,0,1.2,0,bodyColor);
  if(vehicle==='विमान'){
-  box(car,.7,.65,4,bodyMat,0,0,0);
-  box(car,5,.13,1,bodyMat,0,.05,0);
-  box(car,1.7,.12,.55,bodyMat,0,.5,1.5);
-  const prop=new THREE.Group();prop.name='propeller';prop.position.set(0,0,-2.1);car.add(prop);
-  box(prop,.12,.12,1.5,material(0x222222),0,0,0);
-  box(prop,1.5,.12,.12,material(0x222222),0,0,0);
-  const glass=material(0x63c8ef);
-  box(car,.55,.5,.8,glass,0,.35,-.5);
- }
- else if(vehicle==='हेलिकॉप्टर'){
-  box(car,1.3,1.1,2.3,bodyMat,0,0,0);
-  const glass=material(0x67ccef);
-  const canopy=new THREE.Mesh(new THREE.SphereGeometry(.7,16,12),glass);
-  canopy.scale.set(1,.8,.9);canopy.position.set(0,.25,-.8);car.add(canopy);
-  box(car,.12,.12,2,bodyMat,0,.1,1.7);
-  box(car,.8,.12,.12,bodyMat,0,0,2.5);
-  const rotor=new THREE.Group();rotor.name='rotor';rotor.position.y=.8;car.add(rotor);
-  box(rotor,4,.07,.14,material(0x202020),0,0,0);
-  box(rotor,.14,.07,4,material(0x202020),0,0,0);
-  box(car,.12,.12,1.3,material(0x333333),0,-.9,0);
-  box(car,1.5,.12,.12,material(0x333333),0,-.9,0);
- }
- else if(vehicle==='JCB'){
-  box(car,2,.7,2.8,bodyMat,0,.7,0);
-  box(car,1.2,1,1,material(0x6bc5e5),0,1.5,-.4);
-  const arm=box(car,.22,.22,2,material(0x555b5d),0,1.6,-1.8);
-  arm.rotation.x=-.4;
-  box(car,1,.3,.5,material(0x444444),0,.35,-2.6);
- }
- else if(vehicle==='विमान'){
-  box(car,.7,.6,3,bodyMat,0,0,0);
- }
- else{
-  box(car,W,.7,L,bodyMat,0,.45,0);
-  if(!isBike){
-   box(car,W*.72,.7,L*.42,material(0x72cbed),0,1.05,-.2);
+  box(g,1.2,.7,5,0,1.5,0,0xffffff);
+  box(g,12,.18,2,0,1.5,0,bodyColor);
+  box(g,.3,1.6,2,0,2.3,-2,bodyColor);
+  box(g,4,.15,1,0,2.2,-2,bodyColor);
+  const prop=new THREE.Group();box(prop,.15,3,.2,0,0,0,0x222222);prop.position.set(0,1.5,2.7);g.add(prop);g.userData.prop=prop;
+ }else if(vehicle==='हेलिकॉप्टर'){
+  box(g,2.5,1.5,3,0,1.8,0,bodyColor);
+  box(g,.3,.3,4,0,1.8,-3,bodyColor);
+  box(g,9,.15,.4,0,3,0,0x222222);
+  const rotor=new THREE.Group();box(rotor,8,.12,.25,0,0,0,0x222222);rotor.position.y=3;g.add(rotor);g.userData.rotor=rotor;
+ }else{
+  if(vehicle==='ट्रॅक्टर'){
+   box(g,1.5,2,1.7,0,2, -.5,bodyColor);
+   box(g,1.6,.2,.2,0,3, -.5,0x222222);
+  }else if(vehicle==='कार'||vehicle==='जीप'||vehicle==='स्कूटर'){
+   box(g,1.8,1.1,1.8,0,2.1,-.2,bodyColor);
+   box(g,1.5,.7,.1,0,2.4,.75,0x9bd9ee);
+  }else if(vehicle==='ट्रक'){
+   box(g,3,2,1.7,0,2,-1,bodyColor);
+   box(g,2.8,1.5,2,0,2,1.2,0xbcbcbc);
+  }else if(vehicle==='JCB'){
+   box(g,1.5,1.5,1.5,0,2,-1,0xffc400);
+   box(g,.25,3,.25,1,3,-1,0xffc400);
+   box(g,1.8,.3,.3,1,4,-1,0xffc400);
+  }else if(vehicle==='ट्रेन'){
+   box(g,2.5,2.2,4,0,2,0,0xcc2222);
+  }else{
+   box(g,1.3,1.3,2,0,1.8,0,bodyColor);
   }
-  if(isTractor){
-   box(car,1,.8,1,material(0x41484b),0,1.1,-.5);
-   box(car,.09,.7,.09,material(0x333333),-.48,1.5,-.4);
-   box(car,.09,.7,.09,material(0x333333),.48,1.5,-.4);
-  }
-  if(vehicle==='रोड रोलर'){
-   const drum=new THREE.Mesh(new THREE.CylinderGeometry(.75,.75,1.9,24),material(0x777777));
-   drum.rotation.z=Math.PI/2;drum.position.set(0,-.1,-1.3);car.add(drum);
-  }
-  const count=isBike?2:4;
+  const count=vehicle==='बाईक'||vehicle==='स्कूटर'?2:4;
   for(let i=0;i<count;i++){
-   const x=isBike?0:(i%2===0?-W*.62:W*.62);
-   const z=isBike?(i===0?-.6:.6):(i<2?-L*.32:L*.32);
-   const r=isTractor?(i<2?.6:.4):.4;
-   const g=new THREE.Group();g.position.set(x,r,z);car.add(g);
-   const wheelMesh=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.28,20),material(0x151515));
-   wheelMesh.rotation.z=Math.PI/2;g.add(wheelMesh);
-   const rim=new THREE.Mesh(new THREE.CylinderGeometry(r*.48,r*.48,.3,16),material(0xb9c2c6));
-   rim.rotation.z=Math.PI/2;g.add(rim);
-   wheels.push({group:g,radius:r,mesh:wheelMesh,rim});
+   const x=count===2?0:(i%2?1.25:-1.25),z=i<2?1.3:-1.3;
+   const wheel=new THREE.Mesh(new THREE.CylinderGeometry(count===2?.48:.68,count===2?.48:.68,.38,16),new THREE.MeshStandardMaterial({color:0x171717}));
+   wheel.rotation.z=Math.PI/2;wheel.position.set(x,count===2?.5:.7,z);g.add(wheel);wheels.push(wheel);
   }
  }
- car.scale.setScalar(size);
- makeAttachment();
- updateWheels();
+ if(tool==='ट्रॉली'||tool==='लोडर'){
+  box(g,2.5,.7,2,0,1,-3,0x777777);
+ }
+ return g;
 }
-function makeAttachment(){
- const old=car.getObjectByName('attachment');
- if(old)car.remove(old);
- if(attachment==='काही नाही'||air)return;
- const g=new THREE.Group();g.name='attachment';car.add(g);
- if(attachment==='ट्रॉली'){
-  box(g,1.8,.65,1.8,bodyMat,0,.85,2);
-  box(g,1.9,.12,1.9,material(0x626c70),0,.5,2);
-  for(const x of [-.95,.95]){
-   const w=new THREE.Mesh(new THREE.CylinderGeometry(.27,.27,.2,14),material(0x111111));
-   w.rotation.z=Math.PI/2;w.position.set(x,.3,2.4);g.add(w);
-  }
- }else if(attachment==='फ्रंट लोडर'){
-  for(const x of [-.7,.7]){
-   const a=box(g,.14,.14,1.5,material(0x777777),x,.9,-1.6);a.rotation.x=-.2;
-  }
-  box(g,1.5,.25,.5,bodyMat,0,.3,-2.4);
- }else{
-  box(g,1.8,.12,.25,material(0x555555),0,.5,2);
-  for(let i=0;i<5;i++){
-   const blade=new THREE.Mesh(new THREE.ConeGeometry(.16,.55,6),material(0x777777));
-   blade.position.set((i-2)*.34,.35,2);blade.rotation.x=Math.PI;g.add(blade);
-  }
- }
-}
-function updateWheels(){
- wheels.forEach(w=>{
-  const r=w.radius*wheelSize;
-  w.mesh.geometry.dispose();
-  w.mesh.geometry=new THREE.CylinderGeometry(r,r,.28,tire==='साधा'?12:tire==='रिब्ड'?28:20);
-  w.rim.geometry.dispose();
-  w.rim.geometry=new THREE.CylinderGeometry(r*.48,r*.48,.3,16);
-  w.group.position.y=r;
- });
-}
-function clearWorld(){worldObjects.forEach(o=>scene.remove(o));worldObjects=[];obstacles.forEach(o=>scene.remove(o));obstacles=[]}
-function addWorld(o){scene.add(o);worldObjects.push(o)}
-function makeWorld(){
- clearWorld();
- const sky=environment==='आकाश'||air;
- const bg=sky?0x4da9e8:environment==='समुद्रकिनारा'?0x8ad1ed:environment==='जंगल'?0x8ba98d:0x91c9e9;
- scene.background.set(bg);scene.fog=new THREE.Fog(bg,sky?100:55,sky?500:190);
- if(sky){
-  const clouds=[];
-  for(let i=0;i<45;i++){
-   const g=new THREE.Group();
-   for(let j=0;j<4;j++){
-    const c=new THREE.Mesh(new THREE.SphereGeometry(2+Math.random()*2,10,8),material(0xffffff));
-    c.position.set(j*2,Math.random(),Math.random()*2);g.add(c);
-   }
-   g.position.set((Math.random()-.5)*130,8+Math.random()*45,-Math.random()*400);
-   addWorld(g);clouds.push(g);
-  }
-  return;
- }
- const ground=new THREE.Mesh(new THREE.PlaneGeometry(500,500),material(environment==='समुद्रकिनारा'?0xd8c18b:0x477b38));
- ground.rotation.x=-Math.PI/2;ground.position.y=-.15;addWorld(ground);
- const road=new THREE.Mesh(new THREE.PlaneGeometry(9,500),material(0x30363a));
- road.rotation.x=-Math.PI/2;road.position.y=-.08;addWorld(road);
- for(let z=-245;z<250;z+=12){
-  const line=new THREE.Mesh(new THREE.BoxGeometry(.13,.025,5),material(0xf5e9b7));
-  line.position.set(0,-.04,z);addWorld(line);
- }
- for(let i=0;i<60;i++){
-  const z=-240+Math.random()*480,x=(Math.random()<.5?-1:1)*(8+Math.random()*18);
-  const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.15,.25,2,7),material(0x62432b));
-  trunk.position.set(x,1,z);addWorld(trunk);
-  const crown=new THREE.Mesh(new THREE.SphereGeometry(1.4,9,7),material(0x2e743b));
-  crown.position.set(x,2.7,z);addWorld(crown);
- }
- if(['डोंगर','धबधबा'].includes(environment)){
-  for(let i=0;i<16;i++){
-   const hill=new THREE.Mesh(new THREE.ConeGeometry(7,14,7),material(0x657d70));
-   hill.position.set(i%2?22:-22,5,-230+i*30);addWorld(hill);
-  }
- }
- if(environment==='समुद्रकिनारा'){
-  const sea=new THREE.Mesh(new THREE.PlaneGeometry(150,500),material(0x148cc4));
-  sea.rotation.x=-Math.PI/2;sea.position.set(45,-.1,0);addWorld(sea);
- }
-}
-function spawnObstacle(z){
- const g=new THREE.Group();
- const body=new THREE.Mesh(new THREE.BoxGeometry(1.5,1.1,2),material([0xd42d21,0x2675bd,0x777777][Math.floor(Math.random()*3)]));
- body.position.y=.65;g.add(body);
- g.position.set((Math.random()-.5)*6,0,z);
- scene.add(g);obstacles.push(g);
-}
-function resetObstacles(){obstacles.forEach(o=>scene.remove(o));obstacles=[];for(let z=-25;z>-120;z-=20)spawnObstacle(z)}
 
-function setupButtons(){
- addButtonGroup('vehicles',vehicles,vehicle,v=>{vehicle=v;makeVehicle()});
- addButtonGroup('colors',colors,paint,v=>{paint=v[1];bodyMat.color.setHex(paint)});
- addButtonGroup('attachments',attachments,attachment,v=>{attachment=v;makeAttachment()});
- addButtonGroup('tires',['खोल ग्रिप','साधा','रिब्ड'],tire,v=>{tire=v;updateWheels()});
- addButtonGroup('worlds',worlds,environment,v=>{environment=v;makeWorld()});
+function initAudio(){
+ if(!audioCtx){
+  audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  masterGain=audioCtx.createGain();masterGain.gain.value=musicOn?.22:0;masterGain.connect(audioCtx.destination);
+  engineOsc=audioCtx.createOscillator();engineOsc.type='sawtooth';
+  engineGain=audioCtx.createGain();engineGain.gain.value=0;
+  engineOsc.connect(engineGain);engineGain.connect(masterGain);engineOsc.start();
+ }
+ audioCtx.resume();
 }
-$('size').oninput=e=>{size=+e.target.value/100;$('sizeText').textContent=e.target.value+'%';if(car)car.scale.setScalar(size)};
-$('power').oninput=e=>{power=+e.target.value/100;$('powerText').textContent=e.target.value+'%'};
-$('wheel').oninput=e=>{wheelSize=+e.target.value/100;$('wheelText').textContent=e.target.value+'%';updateWheels()};
+function tone(freq,duration=.15,type='sine',volume=.15){
+ if(!audioCtx||!musicOn)return;
+ const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+ o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(volume,audioCtx.currentTime);
+ g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);
+ o.connect(g);g.connect(masterGain);o.start();o.stop(audioCtx.currentTime+duration);
+}
+function startMusic(){
+ if(musicTimer)clearInterval(musicTimer);
+ let n=0;
+ const melody=[262,330,392,330,294,349,440,392,262,330,392,523,440,392,330,294];
+ musicTimer=setInterval(()=>{if(playing&&musicOn){tone(melody[n%melody.length],.34,'triangle',.09);if(n%4===0)tone(110,.2,'sine',.05);n++;}},390);
+}
+function setMusic(v){
+ musicOn=v;
+ if(masterGain)masterGain.gain.setTargetAtTime(v?.22:0,audioCtx.currentTime,.1);
+ $('garageMusic').textContent=musicOn?words[lang].music:words[lang].musicOff;
+ $('musicBtn').textContent=musicOn?words[lang].music:words[lang].musicOff;
+ if(musicOn&&playing)startMusic();else if(musicTimer)clearInterval(musicTimer);
+}
+$('musicBtn').onclick=()=>setMusic(!musicOn);
+$('garageMusic').onclick=()=>setMusic(!musicOn);
 
-document.querySelectorAll('.drive').forEach(b=>{
- const k=b.dataset.k;
- const down=e=>{e.preventDefault();keys[k]=true};
- const up=e=>{e.preventDefault();keys[k]=false};
- b.addEventListener('pointerdown',down);
- b.addEventListener('pointerup',up);
- b.addEventListener('pointercancel',up);
- b.addEventListener('lostpointercapture',up);
-});
-const keymap={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'forward',ArrowDown:'reverse',w:'forward',s:'reverse',a:'left',d:'right'};
-addEventListener('keydown',e=>{if(keymap[e.key])keys[keymap[e.key]]=true});
-addEventListener('keyup',e=>{if(keymap[e.key])keys[keymap[e.key]]=false});
-
-let audio=null,musicOn=true,volume=.5,oscillators=[],engineOsc=null,engineGain=null;
-function startAudio(){
- if(audio)return;
- audio=new (window.AudioContext||window.webkitAudioContext)();
- engineOsc=audio.createOscillator();engineOsc.type='sawtooth';
- engineGain=audio.createGain();engineGain.gain.value=0;
- engineOsc.connect(engineGain);engineGain.connect(audio.destination);engineOsc.start();
+function showMessage(text){
+ $('message').textContent=text;$('message').style.display='block';
+ setTimeout(()=>$('message').style.display='none',1700);
 }
-function beep(freq,duration=.15){
- if(!audio)return;
- const o=audio.createOscillator(),g=audio.createGain();
- o.frequency.value=freq;g.gain.setValueAtTime(volume*.16,audio.currentTime);
- g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);
- o.connect(g);g.connect(audio.destination);o.start();o.stop(audio.currentTime+duration);
+function startGame(){
+ initAudio();init3D();
+ $('garage').style.display='none';$('touchArea').style.display='block';
+ playing=true;speed=0;lastTime=performance.now();
+ startMusic();showMessage(words[lang].ready);animate();
 }
-let musicTimer=null,musicIndex=0;
-const melody=[262,330,392,330,294,349,440,392,262,330,392,523,440,392,330,294];
-function music(){
- if(!audio||!musicOn||musicTimer)return;
- musicTimer=setInterval(()=>{
-  if(!musicOn)return;
-  beep(melody[musicIndex%melody.length],.23);
-  if(musicIndex%4===0)beep(110,.12);
-  musicIndex++;
- },260);
-}
-function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}}
-$('musicBtn').onclick=()=>{
- musicOn=!musicOn;
- $('musicBtn').textContent=musicOn?'🎵 MUSIC ON':'🔇 MUSIC OFF';
- if(musicOn)music();else stopMusic();
-};
-$('volumeBtn').onclick=()=>{
- volume=volume===.5?.9:volume===.9?.2:.5;
- $('volumeBtn').textContent='🔊 आवाज '+Math.round(volume*100)+'%';
-};
-
-let warningSoundAt=0;
-function warningSound(){
- if(!audio)return;
- const now=performance.now();
- if(now-warningSoundAt>750){beep(880,.16);warningSoundAt=now}
-}
-function crashEffect(){
- beep(75,.5);
- $('msg').textContent='💥 CRASH!';
- document.body.animate([{transform:'translate(0,0)'},{transform:'translate(5px,-3px)'},{transform:'translate(-5px,3px)'},{transform:'translate(0,0)'}],{duration:300});
- setTimeout(()=>$('msg').textContent='',700);
-}
-$('cameraBtn').onclick=()=>{cameraMode=cameraMode==='chase'?'cabin':'chase';$('cameraBtn').textContent=cameraMode==='chase'?'📷 मागून':'📷 केबिन'};
-$('rearBtn').onclick=()=>{rear=!rear;$('rearBtn').textContent=rear?'↪ पुढील दृश्य':'↩ मागील दृश्य'};
+$('start').onclick=startGame;
 $('garageBtn').onclick=()=>{
- playing=false;$('garage').style.display='flex';$('controls').style.display='none';$('airControls').style.display='none';$('tools').style.display='none';$('sound').style.display='none';
+ playing=false;$('garage').style.display='block';$('touchArea').style.display='none';
+ if(musicTimer)clearInterval(musicTimer);
 };
+$('cameraBtn').onclick=()=>{camMode=(camMode+1)%3;showMessage('Camera '+(camMode+1));};
 
-$('start').onclick=()=>{
- startAudio();if(audio.state==='suspended')audio.resume();
- stopMusic();if(musicOn)music();
- makeVehicle();makeWorld();resetObstacles();
- velocity=0;points=0;altitude=air?22:0;playing=true;
- $('garage').style.display='none';
- $('controls').style.display=air?'none':'flex';
- $('airControls').style.display=air?'flex':'none';
- $('tools').style.display='flex';$('sound').style.display='flex';
-};
+let pointer=null,startX=0,startY=0,dx=0,dy=0;
+const area=$('touchArea');
+area.addEventListener('pointerdown',e=>{
+ if(!playing)return;pointer=e.pointerId;startX=e.clientX;startY=e.clientY;dx=0;dy=0;
+ area.setPointerCapture(pointer);
+});
+area.addEventListener('pointermove',e=>{
+ if(pointer!==e.pointerId)return;
+ dx=Math.max(-1,Math.min(1,(e.clientX-startX)/95));
+ dy=Math.max(-1,Math.min(1,(e.clientY-startY)/100));
+});
+function release(e){if(pointer===e.pointerId){pointer=null;dx=0;dy=0;}}
+area.addEventListener('pointerup',release);
+area.addEventListener('pointercancel',release);
 
-setupButtons();makeVehicle();makeWorld();
-
-const clock=new THREE.Clock();
-function animate(){
+function animate(now=performance.now()){
+ if(!playing)return;
  requestAnimationFrame(animate);
- const dt=Math.min(clock.getDelta(),.04);
- if(playing&&car){
-  const max=(air?27:17)*power;
-  if(keys.forward)velocity=Math.min(max,velocity+12*dt);
-  else if(keys.reverse)velocity=Math.max(-max*.5,velocity-12*dt);
-  else velocity*=Math.pow(.985,dt*60);
-  if(Math.abs(velocity)<.04)velocity=0;
-
-  car.position.z-=velocity*dt;
-  const steer=(keys.left?1:0)-(keys.right?1:0);
-  car.position.x=THREE.MathUtils.clamp(car.position.x+steer*(air?9:3+Math.abs(velocity)*.1)*dt,air?-55:-3.4,air?55:3.4);
-
-  if(air){
-   if(keys.up)altitude+=12*dt;
-   if(keys.down)altitude-=12*dt;
-   altitude=THREE.MathUtils.clamp(altitude,3,85);
-   car.position.y=altitude;
-   car.rotation.z=-steer*.18;
-   car.rotation.x=keys.up?-.08:keys.down?.08:0;
-   const rotor=car.getObjectByName(vehicle==='हेलिकॉप्टर'?'rotor':'propeller');
-   if(rotor)rotor.rotation.y+=dt*22;
-  }else{
-   car.position.y=0;
-   car.rotation.y=THREE.MathUtils.lerp(car.rotation.y,-steer*.2,.08);
-   wheels.forEach(w=>w.group.rotation.x-=velocity*dt/(w.radius*wheelSize));
-  }
-
-  if(engineGain&&engineOsc){
-   engineOsc.frequency.setTargetAtTime(air?95+Math.abs(velocity)*8:45+Math.abs(velocity)*7,audio.currentTime,.08);
-   engineGain.gain.setTargetAtTime(playing?volume*.055:0,audio.currentTime,.1);
-  }
-
-  if(obstacles.length<7)spawnObstacle(car.position.z-120);
-  let danger=false;
-  for(let i=obstacles.length-1;i>=0;i--){
-   const o=obstacles[i];
-   const dz=Math.abs(o.position.z-car.position.z);
-   const dx=Math.abs(o.position.x-car.position.x);
-   const dy=air?Math.abs(o.position.y-car.position.y):0;
-   if(dz<18&&dx<2.2&&(!air||dy<5))danger=true;
-   if(dz<2.1&&dx<1.4&&(!air||dy<3)){
-    velocity*=.2;
-    crashEffect();
-    o.position.z=car.position.z-35;
-   }
-   if(o.position.z>car.position.z+15){
-    scene.remove(o);obstacles.splice(i,1);points+=10;
-   }
-  }
-  $('warning').style.display=danger?'block':'none';
-  if(danger)warningSound();
-  $('score').textContent=points;
-  $('speed').textContent=Math.round(Math.abs(velocity)*5);
-
-  if(cameraMode==='cabin'){
-   camera.position.set(car.position.x,car.position.y+1.7,car.position.z+(rear?-1: -.8));
-   camera.lookAt(car.position.x,car.position.y+1.5,car.position.z+(rear?12:-12));
-  }else{
-   const behind=rear?-1:1;
-   const target=new THREE.Vector3(car.position.x,car.position.y+(air?5:5),car.position.z+behind*(air?14:10));
-   camera.position.lerp(target,.12);
-   camera.lookAt(car.position.x,car.position.y,car.position.z);
-  }
+ const dt=Math.min((now-lastTime)/1000,.05);lastTime=now;
+ const air=isAir();
+ if(air){
+  speed= Math.min(90,speed+dt*7);
+  altitude=THREE.MathUtils.clamp(altitude-dy*dt*12,5,65);
+  player.position.y=THREE.MathUtils.lerp(player.position.y,altitude,.08);
+  player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,-dx*.5,.08);
+  player.rotation.x=THREE.MathUtils.lerp(player.rotation.x,dy*.2,.06);
+  if(player.userData.prop)player.userData.prop.rotation.z+=dt*18;
+  if(player.userData.rotor)player.userData.rotor.rotation.y+=dt*20;
  }else{
-  $('warning').style.display='none';
-  camera.position.lerp(new THREE.Vector3(7,7,10),.03);
-  camera.lookAt(0,1,0);
+  speed=THREE.MathUtils.clamp(speed-dy*dt*42,0,75);
+  player.position.y=0;
+  player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,-dx*.28,.09);
+ }
+ player.position.x=THREE.MathUtils.clamp(player.position.x+dx*dt*(air?9:Math.max(2,speed*.13)),-5,5);
+ player.position.z-=speed*dt*.20;
+ if(player.position.z < -15)player.position.z= -8;
+ wheels.forEach(w=>w.rotation.x+=speed*dt*.06);
+ obstacles.forEach(o=>{
+  o.position.z+=speed*dt*.2;
+  if(o.position.z>10)o.position.z=-430-Math.random()*100;
+  const dist=Math.abs(o.position.z-player.position.z);
+  const near=dist<5&&Math.abs(o.position.x-player.position.x)<2.4&&(!air||altitude<8);
+  if(near){
+   speed=0;tone(75,.6,'sawtooth',.35);showMessage(words[lang].crash);
+   o.position.z=-300-Math.random()*80;
+  }
+  if(dist<18&&Math.abs(o.position.x-player.position.x)<3){
+   $('warning').style.display='block';warningTimer=1;
+  }
+ });
+ warningTimer-=dt;
+ if(warningTimer<=0)$('warning').style.display='none';
+ if(engineOsc){
+  engineOsc.frequency.setTargetAtTime(55+speed*3,audioCtx.currentTime,.08);
+  engineGain.gain.setTargetAtTime(.015+speed*.001,audioCtx.currentTime,.1);
+ }
+ $('speed').textContent=Math.round(speed);
+ if(camMode===0){
+  camera.position.lerp(new THREE.Vector3(player.position.x,player.position.y+(air?7:5),player.position.z+12),.08);
+  camera.lookAt(player.position.x,player.position.y+1,player.position.z-5);
+ }else if(camMode===1){
+  camera.position.set(player.position.x,player.position.y+2,player.position.z+1);
+  camera.lookAt(player.position.x,player.position.y+1,player.position.z-20);
+ }else{
+  camera.position.lerp(new THREE.Vector3(player.position.x,player.position.y+5,player.position.z-12),.08);
+  camera.lookAt(player.position);
  }
  renderer.render(scene,camera);
 }
-animate();
-
-addEventListener('resize',()=>{
- camera.aspect=innerWidth/innerHeight;
- camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);
+window.addEventListener('resize',()=>{
+ if(!renderer)return;
+ camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);
 });
+setLang('mr');
 </script>
 </body>
 </html>
