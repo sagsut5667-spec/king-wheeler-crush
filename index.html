@@ -1,37 +1,715 @@
-<!doctype html><n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><meta name="theme-color" content="#101820"><title>KING WHEELER CRUSH</title>
+
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>KING WHEELER CRUSH</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101820;color:#fff;font-family:Arial,sans-serif;touch-action:none}#stage{position:fixed;inset:0}canvas{display:block}.panel{background:#101820ed;border:1px solid #536575;border-radius:15px;box-shadow:0 8px 28px #0008}#menu{position:fixed;z-index:10;inset:2% 3%;overflow:auto;padding:14px;text-align:center;touch-action:pan-y}h1{font-size:clamp(26px,6vw,42px);color:#ffc247;margin:4px 0}h2{font-size:18px;color:#ffc247;margin:14px 0 7px}p{color:#d4dce2;margin:6px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.choice{min-height:58px;background:#263945;color:white;border:1px solid #526575;border-radius:10px;font-size:13px;padding:6px}.choice.active{background:#ffc247;color:#111}.row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;align-items:center}.field{display:inline-flex;flex-direction:column;gap:5px;text-align:left;font-size:13px;margin:5px;min-width:120px}select,input{max-width:100%;padding:9px;border-radius:8px;border:1px solid #647482;background:#263945;color:#fff;font-size:15px}input[type=range]{padding:0;accent-color:#ffc247}.primary{background:#ffc247;color:#151515;font-weight:bold;font-size:18px;padding:13px 28px;border:0;border-radius:10px;margin:12px}.secondary{background:#263945;color:white;border:1px solid #657787;border-radius:9px;padding:9px 12px}.note{font-size:12px;color:#aebdc7;line-height:1.4;max-width:760px;margin:9px auto}#hud{position:fixed;z-index:5;top:8px;left:8px;right:8px;display:none;padding:9px;align-items:center;justify-content:space-between;gap:7px;pointer-events:none}#hud>*{pointer-events:auto}#hud strong{color:#ffc247;font-size:13px}.stat{font-size:13px;font-weight:bold}#controls{position:fixed;z-index:6;bottom:12px;left:0;right:0;display:none;justify-content:space-between;align-items:end;padding:0 13px;pointer-events:none}.pad{display:flex;gap:8px;pointer-events:auto}.ctrl{width:clamp(54px,15vw,70px);height:clamp(54px,15vw,70px);border-radius:50%;border:2px solid #ffffff80;background:#ffc247;color:#151515;font-size:21px;font-weight:bold;box-shadow:0 4px 12px #0008;touch-action:none;user-select:none}#cameraBtn{position:fixed;z-index:6;right:12px;bottom:100px;display:none}#pauseBtn{position:fixed;z-index:6;right:10px;top:60px;display:none}#toast{position:fixed;z-index:7;top:23%;left:8%;right:8%;text-align:center;font-size:20px;font-weight:bold;text-shadow:0 3px 9px #000;pointer-events:none}#result{position:fixed;z-index:9;display:none;inset:25% 8% auto;padding:18px;text-align:center}@media(min-width:800px){#menu{inset:3% 14%}.grid{grid-template-columns:repeat(5,1fr)}}
-</style></head><body><div id="stage"></div>
-<section id="menu" class="panel"><h1>👑 KING WHEELER CRUSH</h1><p>Choose your model • Customize • Drive • Crush • Level up</p><h2>1 · Choose your model</h2><div class="grid" id="models">
-<button class="choice active" data-model="tractor">🚜 Tractor</button><button class="choice" data-model="goat">🐐 Goat</button><button class="choice" data-model="sheep">🐑 Sheep</button><button class="choice" data-model="cow">🐄 Cow</button><button class="choice" data-model="chicken">🐔 Chicken</button><button class="choice" data-model="eagle">🦅 Eagle</button><button class="choice" data-model="bike">🏍️ Bike</button><button class="choice" data-model="scooter">🛵 Scooter</button><button class="choice" data-model="car">🚗 Car</button><button class="choice" data-model="jeep">🚙 Jeep</button><button class="choice" data-model="truck">🚛 Truck</button><button class="choice" data-model="roller">🚧 Road Roller</button><button class="choice" data-model="jcb">🏗️ JCB</button><button class="choice" data-model="train">🚂 Train</button><button class="choice" data-model="plane">✈️ Aircraft</button></div>
-<h2>2 · Environment</h2><div class="row"><select id="environment"><option value="jungle">🌴 Jungle</option><option value="village">🏡 Village</option><option value="mountain">⛰️ Mountain Valley</option><option value="coast">🌊 Coast</option><option value="city">🏙️ City Highway</option><option value="waterfall">💧 Waterfall Valley</option></select><select id="difficulty"><option value="easy">Easy</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select></div>
-<h2>3 · Garage customization</h2><div class="row"><label class="field">Paint colour<select id="paint"><option value="#e33b28">Racing Red</option><option value="#ffc247">Golden Yellow</option><option value="#168a4a">Farm Green</option><option value="#1976d2">Ocean Blue</option><option value="#eeeeee">Pearl White</option><option value="#a34bc4">Purple</option><option value="#25292d">Midnight Black</option></select></label><label class="field">Model size<input id="scale" type="range" min=".75" max="1.35" step=".05" value="1"></label><label class="field">Wheel size<input id="wheelScale" type="range" min=".75" max="1.35" step=".05" value="1"></label><label class="field">Tractor implement<select id="implement"><option value="none">No implement</option><option value="trailer">Trailer</option><option value="plough">Plough</option><option value="cultivator">Cultivator</option><option value="rotavator">Rotavator</option><option value="loader">Front loader</option></select></label></div><p class="note">This build includes selectable procedural 3D models for every listed category. Special movement and detailed animations vary by model. This is a playable foundation, not photorealistic commercial 3D assets.</p><button class="primary" id="start">▶ START MISSION</button><p id="best">Best score: 0</p></section>
-<div id="hud" class="panel"><strong>👑 KING WHEELER</strong><span class="stat">Score: <b id="score">0</b></span><span class="stat">Level: <b id="level">1</b></span><span class="stat" id="modelName">TRACTOR</span></div><button class="secondary" id="pauseBtn">Ⅱ Pause</button><button class="secondary" id="cameraBtn">📷 Camera</button><div id="controls"><div class="pad"><button class="ctrl" id="left">◀</button><button class="ctrl" id="right">▶</button></div><div class="pad"><button class="ctrl" id="brake">▼</button><button class="ctrl" id="reverse">R</button><button class="ctrl" id="gas">▲</button></div></div><div id="toast"></div><div id="result" class="panel"><h2>💥 MISSION OVER</h2><p id="resultText"></p><button class="primary" id="retry">↻ PLAY AGAIN</button><button class="secondary" id="garage">Garage</button></div>
-<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script><script type="module">
+*{box-sizing:border-box}
+body{margin:0;overflow:hidden;background:#17232b;color:white;font-family:Arial,sans-serif}
+#game{position:fixed;inset:0}
+canvas{display:block}
+#hud{position:fixed;top:8px;left:8px;right:8px;display:flex;justify-content:space-between;pointer-events:none}
+.pill{background:#101b22dd;padding:9px;border-radius:10px;font-weight:bold}
+#garage{position:fixed;inset:0;background:linear-gradient(130deg,#07131bf5,#17402ff0);display:flex;align-items:center;justify-content:center;padding:10px;overflow:auto}
+.panel{width:min(900px,100%);max-height:96%;overflow:auto;background:#0c171df5;border:1px solid #71818a;border-radius:16px;padding:14px}
+h1{color:#ffc928;margin:0;font-size:clamp(24px,5vw,40px)}
+h2{font-size:15px;color:#ffe08a;margin:10px 0 6px}
+.note{font-size:12px;color:#cbd6db;margin:4px 0 8px}
+.group{border-top:1px solid #ffffff25;padding-top:5px;margin-top:7px}
+.buttons{display:flex;flex-wrap:wrap;gap:6px}
+button{background:#263943;color:white;border:1px solid #819099;border-radius:9px;padding:9px 11px;font-weight:bold;font-size:12px;touch-action:manipulation}
+button.active{background:#a86a05;border-color:#ffdb72}
+label{display:block;font-size:12px;margin:7px 0 2px}
+input[type=range]{width:min(250px,100%);accent-color:#ffc928}
+#start{margin-top:12px;padding:13px 25px;font-size:17px;background:linear-gradient(130deg,#ffcf28,#ed7800);color:#1a160b;border:0}
+#controls{position:fixed;bottom:12px;left:12px;right:12px;display:none;justify-content:space-between;pointer-events:none}
+.pad{display:grid;grid-template-columns:repeat(2,54px);gap:7px;pointer-events:auto}
+.drive{width:54px;height:54px;padding:0;font-size:23px;background:#0b151bdc;border:2px solid #ffffffaa}
+#tools{position:fixed;right:8px;top:58px;display:none;flex-direction:column;gap:5px}
+#hint{position:fixed;bottom:132px;left:50%;transform:translateX(-50%);background:#071016c9;padding:6px 9px;border-radius:8px;font-size:11px;white-space:nowrap;display:none}
+#msg{position:fixed;top:44%;left:50%;transform:translate(-50%,-50%);font-size:24px;font-weight:bold;color:#ffe078}
+@media(max-width:550px){.panel{padding:10px}.pad{grid-template-columns:repeat(2,50px)}.drive{width:50px;height:50px}}
+</style>
+</head>
+<body>
+<div id="game"></div>
+
+<div id="hud">
+ <div class="pill">🏁 KING WHEELER CRUSH</div>
+ <div class="pill">स्कोअर <span id="score">0</span> | <span id="spd">0</span> km/h</div>
+</div>
+
+<div id="tools">
+ <button id="cam">📷 मागून</button>
+ <button id="rear">↩ मागील दृश्य</button>
+ <button id="garageBtn">🔧 गॅरेज</button>
+</div>
+
+<div id="hint">▲ पुढे　▼ रिव्हर्स　◀ ▶ वळवा</div>
+
+<div id="controls">
+ <div class="pad">
+  <button class="drive" data-k="left">◀</button>
+  <button class="drive" data-k="right">▶</button>
+ </div>
+ <div class="pad">
+  <button class="drive" data-k="reverse">▼</button>
+  <button class="drive" data-k="forward">▲</button>
+ </div>
+</div>
+
+<div id="msg"></div>
+
+<div id="garage">
+ <div class="panel">
+  <h1>KING WHEELER CRUSH</h1>
+  <div class="note">3D ड्रायव्हिंग गेम • गॅरेज • वाहन कस्टमायझेशन</div>
+
+  <div class="group">
+   <h2>वाहन निवडा</h2>
+   <div class="buttons" id="vehicles"></div>
+  </div>
+
+  <div class="group">
+   <h2>रंग बदला</h2>
+   <div class="buttons" id="colors"></div>
+  </div>
+
+  <div class="group">
+   <h2>अवजारे / जोडणी</h2>
+   <div class="buttons" id="implements"></div>
+  </div>
+
+  <div class="group">
+   <h2>टायर डिझाइन</h2>
+   <div class="buttons" id="tires"></div>
+  </div>
+
+  <div class="group">
+   <h2>कस्टमायझेशन</h2>
+   <label>वाहनाचा आकार: <b id="sizeVal">100%</b></label>
+   <input id="size" type="range" min="80" max="125" value="100">
+
+   <label>कमाल वेग: <b id="speedVal">100%</b></label>
+   <input id="speedRange" type="range" min="60" max="160" value="100">
+
+   <label>टायरचा आकार: <b id="wheelVal">100%</b></label>
+   <input id="wheel" type="range" min="75" max="145" value="100">
+  </div>
+
+  <div class="group">
+   <h2>मैदान निवडा</h2>
+   <div class="buttons" id="worlds"></div>
+  </div>
+
+  <button id="start">गेम सुरू करा ▶</button>
+  <div class="note">▲ पुढे, ▼ रिव्हर्स, ◀ ▶ वळवण्यासाठी.</div>
+ </div>
+</div>
+
+<script type="importmap">
+{
+ "imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+ }
+}
+</script>
+
+<script type="module">
 import * as THREE from 'three';
-const $=id=>document.getElementById(id),scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,500),renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
-renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.6));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;$('stage').appendChild(renderer.domElement);
-scene.background=new THREE.Color(0x8cc9e8);scene.fog=new THREE.Fog(0x8cc9e8,42,155);scene.add(new THREE.HemisphereLight(0xffffff,0x58634b,1.8));const sun=new THREE.DirectionalLight(0xffffff,2);sun.position.set(-18,30,20);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
-const mat=(c,r=.8)=>new THREE.MeshStandardMaterial({color:c,roughness:r}),M={black:mat(0x171a1d),rubber:mat(0x202326),metal:mat(0x777f85),glass:mat(0x83c5df,.25),white:mat(0xffffff),yellow:mat(0xffbd35),red:mat(0xb92d24),wood:mat(0x85562f)};
-let player,modelRoot,implementRoot,wheels=[],obstacles=[],selected='tractor',score=0,level=1,best=Number(localStorage.getItem('kwcBest')||0),speed=0,spawnClock=0,running=false,paused=false,inside=false;const keys={};let last=performance.now();$('best').textContent='Best score: '+best;
-function box(p,w,h,d,m,x,y,z){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;p.add(o);return o}function ball(p,r,m,x,y,z,sx=1,sy=1,sz=1){const o=new THREE.Mesh(new THREE.SphereGeometry(r,16,12),m);o.position.set(x,y,z);o.scale.set(sx,sy,sz);o.castShadow=true;p.add(o);return o}function cyl(p,r1,r2,h,m,x,y,z,rot=0){const o=new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,16),m);o.position.set(x,y,z);o.rotation.z=rot;o.castShadow=true;p.add(o);return o}
-function wheel(p,x,y,z,r){const g=new THREE.Group();g.position.set(x,y,z);p.add(g);const t=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.3,20),M.rubber);t.rotation.z=Math.PI/2;t.castShadow=true;g.add(t);const h=new THREE.Mesh(new THREE.CylinderGeometry(r*.48,r*.48,.32,16),M.metal);h.rotation.z=Math.PI/2;g.add(h);wheels.push(g);return g}
-function tractor(p){const g=new THREE.Group(),c=mat($('paint').value);p.add(g);box(g,1.65,.48,2.55,c,0,1.12,0);box(g,1.38,.78,1.12,c,0,1.65,-.67);box(g,1.05,.12,1.15,M.black,0,2.08,-.68);box(g,.94,.62,.94,M.glass,0,2.43,-.65);box(g,.1,.75,1.05,M.metal,-.53,2.42,-.65);box(g,.1,.75,1.05,M.metal,.53,2.42,-.65);box(g,.1,.75,.1,M.metal,0,2.42,-1.1);box(g,.42,.28,.72,c,0,1.48,1.35);cyl(g,.065,.065,.85,M.black,.55,2.28,.78);wheel(g,-.95,.61,.86,.62);wheel(g,.95,.61,.86,.62);wheel(g,-.95,.52,-.9,.42);wheel(g,.95,.52,-.9,.42);return g}
-function animal(p,type){const g=new THREE.Group(),coat=mat(type==='cow'?0xf1f1e8:type==='goat'?0xd0c4a5:type==='sheep'?0xe8e5dc:0xc88b35);p.add(g);ball(g,.52,coat,0,.83,0,1.22,.85,.75);ball(g,.32,coat,0,1.12,.52,.9,.95,.9);if(type==='goat'){cyl(g,.055,.055,.5,M.yellow,-.2,1.48,.48);cyl(g,.055,.055,.5,M.yellow,.2,1.48,.48)}if(type==='cow'){ball(g,.12,M.black,-.28,1.1,.75);ball(g,.12,M.black,.27,.88,-.1)}if(type==='sheep')for(let i=0;i<7;i++)ball(g,.24,coat,Math.cos(i)*.4,1.1,Math.sin(i)*.4,.9,.9,.9);for(const x of [-.32,.32])for(const z of [-.25,.28])cyl(g,.075,.075,.55,M.black,x,.3,z);return g}
-function bird(p,type){const g=new THREE.Group(),f=mat(type==='eagle'?0x67452e:0xc98c32);p.add(g);ball(g,.34,f,0,.85,0,1.1,1,.9);ball(g,.2,f,0,1.1,.25);ball(g,.055,M.black,.08,1.13,.4);cyl(g,.08,.015,.2,M.yellow,0,1.02,.48,Math.PI/2);ball(g,.26,f,-.3,.88,0,1.5,.25,.8);ball(g,.26,f,.3,.88,0,1.5,.25,.8);return g}
-function vehicle(p,type){const g=new THREE.Group(),c=mat($('paint').value);p.add(g);if(type==='bike'||type==='scooter'){box(g,.42,.45,1.15,c,0,1.05,0);box(g,.55,.18,.55,M.black,0,1.38,-.12);wheel(g,0,.42,.67,.38);wheel(g,0,.42,-.67,.38);if(type==='scooter')box(g,.5,.55,.3,c,0,1.15,.48);return g}const len=['truck','train'].includes(type)?3.6:2.5;box(g,1.8,.62,len,c,0,1.02,0);box(g,1.55,.82,1.05,M.glass,0,1.7,.55);if(type==='truck')box(g,1.7,.85,1.7,c,0,1.68,-1.25);if(type==='jeep')box(g,1.65,.45,1.35,c,0,1.8,-.65);if(type==='roller')cyl(g,.78,.78,.9,M.metal,0,.75,-.9,Math.PI/2);if(type==='jcb'){box(g,.25,1.45,.25,M.yellow,.85,2,-.65);box(g,.25,.25,1.4,M.yellow,.85,2.7,-1.3);box(g,.65,.35,.55,M.yellow,.85,1.7,-2)}if(type==='train')box(g,1.55,1,1.1,c,0,1.8,-1.45);if(type==='plane'){box(g,5,.12,.6,c,0,1.2,0);box(g,.14,.14,3,c,0,1.15,-.7)}const r=type==='roller'?.68:.45;for(const x of [-.92,.92])for(const z of [-len*.32,len*.32])wheel(g,x,r+.12,z,r);return g}
-function buildModel(){player=new THREE.Group();scene.add(player);modelRoot=new THREE.Group();player.add(modelRoot);if(['goat','sheep','cow'].includes(selected))animal(modelRoot,selected);else if(['chicken','eagle'].includes(selected))bird(modelRoot,selected);else if(selected==='tractor')tractor(modelRoot);else vehicle(modelRoot,selected);modelRoot.scale.setScalar(Number($('scale').value));implementRoot=new THREE.Group();player.add(implementRoot);buildImplement()}
-function buildImplement(){while(implementRoot.children.length)implementRoot.remove(implementRoot.children[0]);if(selected!=='tractor')return;const t=$('implement').value;if(t==='none')return;if(t==='trailer'){box(implementRoot,1.8,.16,2.7,M.red,0,1,-2.9);box(implementRoot,1.8,.55,.12,M.red,0,1.35,-4.2);box(implementRoot,.12,.55,2.7,M.red,-.85,1.25,-2.9);box(implementRoot,.12,.55,2.7,M.red,.85,1.25,-2.9);box(implementRoot,.14,.14,1,M.metal,0,.8,-1.65)}else if(t==='loader'){box(implementRoot,.14,1.2,.14,M.yellow,-.8,1.35,1.45);box(implementRoot,.14,1.2,.14,M.yellow,.8,1.35,1.45);box(implementRoot,1.75,.18,.18,M.yellow,0,1.95,1.45);box(implementRoot,1.8,.32,.65,M.metal,0,.78,2.25)}else{box(implementRoot,1.8,.16,.4,M.metal,0,.65,-2);for(let x=-.75;x<=.76;x+=.38){if(t==='plough')box(implementRoot,.18,.5,.15,M.metal,x,.35,-2.25);else cyl(implementRoot,.17,.17,.12,M.metal,x,.35,-2.2)}}}
-function clearWorld(){for(let i=scene.children.length-1;i>=0;i--){const o=scene.children[i];if(o!==sun&&o.type!=='HemisphereLight')scene.remove(o)}obstacles=[];wheels=[]}
-function environment(){const e=$('environment').value;scene.background.set(e==='coast'?0x83cce8:e==='city'?0x9bb4c3:0x8cc9e8);scene.fog.color.copy(scene.background);const gc=e==='coast'?0xc7b17a:e==='city'?0x737b80:e==='mountain'?0x77786d:0x47743b;const ground=new THREE.Mesh(new THREE.PlaneGeometry(500,500),mat(gc));ground.rotation.x=-Math.PI/2;ground.position.y=-.12;ground.receiveShadow=true;scene.add(ground);box(scene,9,.12,450,mat(0x34383b),0,-.04,0);for(let z=-220;z<225;z+=12)box(scene,.15,.025,5,M.yellow,0,.04,z);for(let z=-210;z<220;z+=14)for(const s of [-1,1]){const x=s*(9+Math.random()*5);if(e==='city')box(scene,3,5+Math.random()*10,3,mat(0x758a98),x,2.5,z);else{cyl(scene,.15,.22,2.7,M.wood,x,1.15,z);ball(scene,1.2,mat(0x287b3b),x,2.8,z,1.2,1.3,1.2)}}}
-function obstacle(z){const k=['crate','rock','barrel','cone','hay'][Math.floor(Math.random()*5)],x=(Math.random()<.5?-1:1)*(1.6+Math.random()*1.5);let o;if(k==='crate')o=box(scene,1,1,1,mat(0x946237),x,.5,z);if(k==='rock')o=ball(scene,.62,mat(0x777777),x,.48,z,1.2,.8,1);if(k==='barrel')o=cyl(scene,.42,.42,.9,mat(0xa83c29),x,.48,z);if(k==='cone')o=cyl(scene,.08,.38,.85,mat(0xff761c),x,.43,z);if(k==='hay')o=cyl(scene,.48,.48,.8,mat(0xc9a64d),x,.48,z,Math.PI/2);o.userData.hit=false;obstacles.push(o)}
-function reset(){clearWorld();environment();buildModel();player.position.set(0,0,0);speed=0;score=0;level=1;spawnClock=0;for(let i=0;i<13;i++)obstacle(18+i*15);$('score').textContent='0';$('level').textContent='1';$('modelName').textContent=selected.toUpperCase()}
-function toast(t){$('toast').textContent=t}function start(){ $('result').style.display='none';reset();running=true;paused=false;$('menu').style.display='none';$('hud').style.display='flex';$('controls').style.display='flex';$('cameraBtn').style.display='block';$('pauseBtn').style.display='block';toast('MISSION START!');setTimeout(()=>{if(running)toast('')},1200)}
-function home(){running=false;paused=false;$('menu').style.display='block';$('hud').style.display='none';$('controls').style.display='none';$('cameraBtn').style.display='none';$('pauseBtn').style.display='none';$('result').style.display='none';toast('')}
-function finish(){running=false;best=Math.max(best,score);localStorage.setItem('kwcBest',String(best));$('best').textContent='Best score: '+best;$('resultText').textContent='Score: '+score+' · Best: '+best;$('result').style.display='block'}
-function update(dt){if(!running||paused||!player)return;let f=keys.gas?1:0,r=keys.reverse?1:0;if(f)speed=Math.min(speed+dt*8,16);else if(r)speed=Math.max(speed-dt*10,-6);else speed*=Math.pow(.94,dt*60);if(keys.brake)speed*=Math.pow(.82,dt*60);const steer=(keys.left?1:0)-(keys.right?1:0);player.position.x=THREE.MathUtils.clamp(player.position.x+steer*dt*(3+Math.abs(speed)*.22),-3.4,3.4);player.rotation.y=THREE.MathUtils.lerp(player.rotation.y,-steer*.16,.12);player.position.z+=speed*dt;for(const w of wheels)w.rotation.x-=speed*dt*1.6;for(const o of obstacles){if(!o.userData.hit&&Math.abs(o.position.z-player.position.z)<1.2&&Math.abs(o.position.x-player.position.x)<1.05){o.userData.hit=true;score+=100;o.scale.setScalar(.12);toast('💥 CRUSH! +100');setTimeout(()=>{if(running)toast('')},600)}}obstacles=obstacles.filter(o=>{if(o.position.z<player.position.z-12){scene.remove(o);return false}return true});spawnClock+=dt;if(spawnClock>1.2){obstacle(player.position.z+95);spawnClock=0}score+=Math.max(0,Math.floor(Math.abs(speed)*dt));$('score').textContent=score;const lv=1+Math.floor(score/1200);if(lv>level){level=lv;$('level').textContent=level;toast('⭐ LEVEL '+level+'!');setTimeout(()=>{if(running)toast('')},1000)}if(Math.abs(player.position.x)>3.3&&Math.abs(speed)>8)finish()}
-function cameraUpdate(){if(!player)return;const dest=inside?new THREE.Vector3(player.position.x,1.9,player.position.z+1.05):new THREE.Vector3(player.position.x,5.3,player.position.z-9.5);camera.position.lerp(dest,inside?.2:.09);camera.lookAt(player.position.x,inside?1.65:1.3,player.position.z+(inside?12:3.5))}
-function animate(t){requestAnimationFrame(animate);const dt=Math.min((t-last)/1000,.04);last=t;update(dt);cameraUpdate();renderer.render(scene,camera)}requestAnimationFrame(animate);
-$('models').addEventListener('click',e=>{const b=e.target.closest('[data-model]');if(!b)return;selected=b.dataset.model;document.querySelectorAll('[data-model]').forEach(x=>x.classList.toggle('active',x===b))});$('start').onclick=start;$('retry').onclick=start;$('garage').onclick=home;$('pauseBtn').onclick=()=>{if(!running)return;paused=!paused;$('pauseBtn').textContent=paused?'▶ Resume':'Ⅱ Pause';toast(paused?'PAUSED':'RESUME')};$('cameraBtn').onclick=()=>{inside=!inside;$('cameraBtn').textContent=inside?'📷 Chase':'📷 Cabin'};$('implement').onchange=()=>{if(running&&selected==='tractor')buildImplement()};
-function hold(id,k){const el=$(id),down=e=>{e.preventDefault();keys[k]=true;try{el.setPointerCapture(e.pointerId)}catch{}},up=e=>{e.preventDefault();keys[k]=false};el.addEventListener('pointerdown',down);el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);el.addEventListener('lostpointercapture',up)}hold('gas','gas');hold('reverse','reverse');hold('brake','brake');hold('left','left');hold('right','right');const map={ArrowUp:'gas',KeyW:'gas',ArrowDown:'reverse',KeyS:'reverse',Space:'brake',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};window.addEventListener('keydown',e=>{if(map[e.code]){keys[map[e.code]]=true;e.preventDefault()}});window.addEventListener('keyup',e=>{if(map[e.code])keys[map[e.code]]=false});window.addEventListener('blur',()=>Object.keys(keys).forEach(k=>keys[k]=false));window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});
-</script></body></html>
+
+const $=id=>document.getElementById(id);
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color(0x91c9e9);
+scene.fog=new THREE.Fog(0x91c9e9,55,190);
+
+const camera=new THREE.PerspectiveCamera(
+ 65,innerWidth/innerHeight,.1,500
+);
+
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+$('game').appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0xeaf7ff,0x526044,2));
+
+const sun=new THREE.DirectionalLight(0xffffff,2);
+sun.position.set(-15,30,18);
+sun.castShadow=true;
+scene.add(sun);
+
+const mat=(c,r=.8)=>new THREE.MeshStandardMaterial({
+ color:c,roughness:r
+});
+
+const roadMat=mat(0x30363a);
+const grassMat=mat(0x477b38);
+const lineMat=mat(0xf6e8b1);
+const treeMat=mat(0x2e743b);
+const trunkMat=mat(0x62432b);
+const metal=mat(0x69747a);
+
+let vehicle='ट्रॅक्टर क्लासिक';
+let paint=0xffc928;
+let attachment='काही नाही';
+let tire='खोल ग्रिप';
+let environment='गाव';
+
+let size=1;
+let power=1;
+let wheelSize=1;
+
+let car=null;
+let paintMaterial=null;
+let wheels=[];
+let worldObjects=[];
+let traffic=[];
+
+let velocity=0;
+let points=0;
+let playing=false;
+let cameraMode='chase';
+let rearView=false;
+
+const keys={
+ left:false,right:false,forward:false,reverse:false
+};
+
+const vehicles=[
+ 'ट्रॅक्टर क्लासिक','ट्रॅक्टर मॉडर्न',
+ 'ट्रॅक्टर हेवी','ट्रॅक्टर कॉम्पॅक्ट',
+ 'बाईक','स्कूटर','कार','जीप','ट्रक',
+ 'रोड रोलर','JCB','ट्रेन','विमान'
+];
+
+const colors=[
+ ['पिवळा',0xffc928],
+ ['लाल',0xd92d24],
+ ['निळा',0x1976d2],
+ ['हिरवा',0x229447],
+ ['काळा',0x20252b],
+ ['नारिंगी',0xf07816]
+];
+
+const attachments=[
+ 'काही नाही','ट्रॉली','नांगर',
+ 'कल्टिव्हेटर','रोटाव्हेटर','फ्रंट लोडर'
+];
+
+const worlds=[
+ 'गाव','जंगल','डोंगर',
+ 'समुद्रकिनारा','हायवे','धबधबा'
+];
+
+function buttons(id,items,isActive,action){
+ const el=$(id);
+ el.innerHTML='';
+
+ items.forEach(v=>{
+  const b=document.createElement('button');
+  b.textContent=Array.isArray(v)?v[0]:v;
+
+  if(isActive(v))b.classList.add('active');
+
+  b.onclick=()=>{
+   action(v);
+   [...el.children].forEach(x=>x.classList.remove('active'));
+   b.classList.add('active');
+  };
+
+  el.appendChild(b);
+ });
+}
+
+function box(parent,w,h,d,material,x,y,z){
+ const o=new THREE.Mesh(
+  new THREE.BoxGeometry(w,h,d),material
+ );
+ o.position.set(x,y,z);
+ o.castShadow=true;
+ o.receiveShadow=true;
+ parent.add(o);
+ return o;
+}
+
+function buildVehicle(){
+ if(car)scene.remove(car);
+
+ wheels=[];
+ paintMaterial=mat(paint,.45);
+ car=new THREE.Group();
+ scene.add(car);
+
+ const tractor=vehicle.startsWith('ट्रॅक्टर');
+ const bike=['बाईक','स्कूटर'].includes(vehicle);
+ const big=['ट्रक','ट्रेन','विमान'].includes(vehicle);
+
+ const W=bike?.6:tractor?1.8:big?2.4:1.7;
+ const L=bike?1.6:tractor?2.8:big?4.2:2.8;
+
+ if(vehicle==='JCB'){
+  box(car,2,.7,2.8,paintMaterial,0,.85,0);
+  box(car,1.3,1,1.2,mat(0x70c9e8),0,1.55,-.4);
+  let arm=box(car,.24,.24,2,metal,0,1.7,-1.8);
+  arm.rotation.x=-.4;
+  box(car,1,.3,.55,metal,0,.4,-2.7);
+ }
+ else if(vehicle==='रोड रोलर'){
+  box(car,2,1,2.7,paintMaterial,0,1,0);
+  let drum=new THREE.Mesh(
+   new THREE.CylinderGeometry(.8,.8,1.9,24),metal
+  );
+  drum.rotation.z=Math.PI/2;
+  drum.position.set(0,.8,-1.4);
+  car.add(drum);
+ }
+ else if(vehicle==='विमान'){
+  box(car,.7,.7,4,paintMaterial,0,1.2,0);
+  box(car,5,.14,1,paintMaterial,0,1.2,0);
+  box(car,1.6,.12,.6,paintMaterial,0,1.6,1.6);
+ }
+ else if(vehicle==='ट्रेन'){
+  box(car,2.1,1.6,4.2,paintMaterial,0,1.3,0);
+  box(car,1.8,.8,1,mat(0x70c9e8),0,2.2,-.7);
+ }
+ else{
+  box(car,W,.65,L,paintMaterial,0,bike?.85:1,0);
+
+  if(bike){
+   let tank=new THREE.Mesh(
+    new THREE.SphereGeometry(.4,16,12),paintMaterial
+   );
+   tank.scale.set(1,.7,1);
+   tank.position.set(0,1.25,-.1);
+   car.add(tank);
+  }
+  else{
+   box(car,W*.72,.72,L*.42,mat(0x70c9e8),0,1.65,-.15);
+
+   if(tractor){
+    box(car,1,.9,1.1,metal,0,1.8,-.35);
+    for(let x of [-.5,.5]){
+     box(car,.08,.85,.08,metal,x,2.2,-.35);
+    }
+   }
+  }
+ }
+
+ const n=bike?2:4;
+
+ for(let i=0;i<n;i++){
+  let z=bike?(i?-.58:.58):(i<2?-L*.32:L*.32);
+  let x=bike?0:(i%2===0?-W*.62:W*.62);
+  let r=tractor?(i<2?.62:.43):.42;
+
+  let g=new THREE.Group();
+  g.position.set(x,r,z);
+  car.add(g);
+
+  let t=new THREE.Mesh(
+   new THREE.CylinderGeometry(r,r,.28,20),
+   mat(0x17191b)
+  );
+  t.rotation.z=Math.PI/2;
+  g.add(t);
+
+  let rim=new THREE.Mesh(
+   new THREE.CylinderGeometry(r*.5,r*.5,.3,16),
+   mat(0xb8c0c4)
+  );
+  rim.rotation.z=Math.PI/2;
+  g.add(rim);
+
+  wheels.push({group:g,tire:t,radius:r});
+ }
+
+ car.scale.setScalar(size);
+ buildAttachment();
+ updateWheels();
+}
+
+function buildAttachment(){
+ if(!car)return;
+
+ let old=car.getObjectByName('attachment');
+ if(old)car.remove(old);
+
+ if(attachment==='काही नाही')return;
+
+ let g=new THREE.Group();
+ g.name='attachment';
+ car.add(g);
+
+ if(attachment==='ट्रॉली'){
+  box(g,1.8,.65,1.7,paintMaterial,0,.95,2.15);
+  box(g,1.9,.12,1.8,metal,0,.58,2.15);
+
+  for(let x of [-.95,.95]){
+   let w=new THREE.Mesh(
+    new THREE.CylinderGeometry(.27,.27,.2,14),
+    mat(0x171717)
+   );
+   w.rotation.z=Math.PI/2;
+   w.position.set(x,.35,2.5);
+   g.add(w);
+  }
+ }
+ else if(attachment==='फ्रंट लोडर'){
+  for(let x of [-.7,.7]){
+   let a=box(g,.15,.15,1.7,metal,x,1,-1.8);
+   a.rotation.x=-.2;
+  }
+  box(g,1.55,.25,.6,paintMaterial,0,.4,-2.6);
+ }
+ else{
+  for(let i=0;i<5;i++){
+   let blade=new THREE.Mesh(
+    new THREE.ConeGeometry(.17,.55,6),metal
+   );
+   blade.position.set((i-2)*.32,.45,1.9+i*.18);
+   blade.rotation.x=Math.PI;
+   g.add(blade);
+  }
+  box(g,1.8,.12,.25,metal,0,.7,2.15);
+ }
+}
+
+function updateWheels(){
+ for(let w of wheels){
+  let r=w.radius*wheelSize;
+
+  w.tire.geometry.dispose();
+  w.tire.geometry=new THREE.CylinderGeometry(
+   r,r,.28,tire==='साधा'?12:tire==='रिब्ड'?28:20
+  );
+
+  w.group.children[1].geometry.dispose();
+  w.group.children[1].geometry=new THREE.CylinderGeometry(
+   r*.5,r*.5,.3,16
+  );
+
+  w.group.position.y=r;
+ }
+}
+
+function buildWorld(){
+ for(let o of worldObjects)scene.remove(o);
+ worldObjects=[];
+
+ for(let o of traffic)scene.remove(o);
+ traffic=[];
+
+ let bg=environment==='समुद्रकिनारा'?0x83cce8:
+ environment==='जंगल'?0x8db7a0:0x91c9e9;
+
+ scene.background.set(bg);
+ scene.fog.color.set(bg);
+
+ let ground=new THREE.Mesh(
+  new THREE.PlaneGeometry(500,500),grassMat
+ );
+ ground.rotation.x=-Math.PI/2;
+ ground.position.y=-.12;
+ scene.add(ground);
+ worldObjects.push(ground);
+
+ let road=new THREE.Mesh(
+  new THREE.PlaneGeometry(9,500),roadMat
+ );
+ road.rotation.x=-Math.PI/2;
+ road.position.y=-.08;
+ scene.add(road);
+ worldObjects.push(road);
+
+ for(let z=-240;z<250;z+=12){
+  let s=new THREE.Mesh(
+   new THREE.BoxGeometry(.13,.025,5),lineMat
+  );
+  s.position.set(0,-.045,z);
+  scene.add(s);
+  worldObjects.push(s);
+ }
+
+ let count=environment==='जंगल'?75:
+ environment==='गाव'?35:22;
+
+ for(let i=0;i<count;i++){
+  let z=-240+Math.random()*480;
+  let x=(Math.random()<.5?-1:1)*(7+Math.random()*20);
+
+  let tr=new THREE.Mesh(
+   new THREE.CylinderGeometry(.18,.26,2.3,7),trunkMat
+  );
+  tr.position.set(x,1.05,z);
+  scene.add(tr);
+  worldObjects.push(tr);
+
+  let crown=new THREE.Mesh(
+   new THREE.SphereGeometry(1.25,9,7),treeMat
+  );
+  crown.position.set(x,2.7,z);
+  scene.add(crown);
+  worldObjects.push(crown);
+ }
+
+ if(['डोंगर','समुद्रकिनारा','धबधबा'].includes(environment)){
+  for(let i=0;i<15;i++){
+   let h=new THREE.Mesh(
+    new THREE.ConeGeometry(7,13,7),
+    mat(environment==='समुद्रकिनारा'?0xd6c18c:0x647d69)
+   );
+   h.position.set((i%2?1:-1)*22,4,-220+i*30);
+   scene.add(h);
+   worldObjects.push(h);
+  }
+ }
+}
+
+function spawn(z){
+ let g=new THREE.Group();
+
+ let body=new THREE.Mesh(
+  new THREE.BoxGeometry(1.4,1.15,2),
+  mat([0xd33b28,0x2875bd,0x999999][Math.floor(Math.random()*3)])
+ );
+ body.position.y=.65;
+ g.add(body);
+
+ g.position.set((Math.random()-.5)*6.2,0,z);
+ scene.add(g);
+ traffic.push(g);
+}
+
+function resetTraffic(){
+ traffic.forEach(o=>scene.remove(o));
+ traffic=[];
+ for(let z=-25;z>-115;z-=18)spawn(z);
+}
+
+function initButtons(){
+ buttons('vehicles',vehicles,v=>v===vehicle,v=>{
+  vehicle=v;
+  buildVehicle();
+ });
+
+ buttons('colors',colors,v=>v[1]===paint,v=>{
+  paint=v[1];
+  if(paintMaterial)paintMaterial.color.setHex(paint);
+ });
+
+ buttons('implements',attachments,v=>v===attachment,v=>{
+  attachment=v;
+  buildAttachment();
+ });
+
+ buttons('tires',['खोल ग्रिप','साधा','रिब्ड'],v=>v===tire,v=>{
+  tire=v;
+  updateWheels();
+ });
+
+ buttons('worlds',worlds,v=>v===environment,v=>{
+  environment=v;
+  buildWorld();
+ });
+}
+
+$('size').oninput=e=>{
+ size=+e.target.value/100;
+ $('sizeVal').textContent=e.target.value+'%';
+ if(car)car.scale.setScalar(size);
+};
+
+$('speedRange').oninput=e=>{
+ power=+e.target.value/100;
+ $('speedVal').textContent=e.target.value+'%';
+};
+
+$('wheel').oninput=e=>{
+ wheelSize=+e.target.value/100;
+ $('wheelVal').textContent=e.target.value+'%';
+ updateWheels();
+};
+
+function setKey(k,v){keys[k]=v;}
+
+document.querySelectorAll('.drive').forEach(b=>{
+ let k=b.dataset.k;
+
+ let down=e=>{
+  e.preventDefault();
+  setKey(k,true);
+ };
+
+ let up=e=>{
+  e.preventDefault();
+  setKey(k,false);
+ };
+
+ b.addEventListener('pointerdown',down);
+ b.addEventListener('pointerup',up);
+ b.addEventListener('pointercancel',up);
+ b.addEventListener('lostpointercapture',up);
+});
+
+const keyMap={
+ ArrowLeft:'left',ArrowRight:'right',
+ ArrowUp:'forward',ArrowDown:'reverse',
+ a:'left',d:'right',w:'forward',s:'reverse'
+};
+
+addEventListener('keydown',e=>{
+ if(keyMap[e.key])keys[keyMap[e.key]]=true;
+});
+
+addEventListener('keyup',e=>{
+ if(keyMap[e.key])keys[keyMap[e.key]]=false;
+});
+
+$('cam').onclick=()=>{
+ cameraMode=cameraMode==='chase'?'cabin':'chase';
+ $('cam').textContent=cameraMode==='chase'?'📷 मागून':'📷 केबिन';
+};
+
+$('rear').onclick=()=>{
+ rearView=!rearView;
+ $('rear').textContent=rearView?'↪ पुढील दृश्य':'↩ मागील दृश्य';
+};
+
+$('garageBtn').onclick=()=>{
+ playing=false;
+ $('garage').style.display='flex';
+ $('controls').style.display='none';
+ $('tools').style.display='none';
+ $('hint').style.display='none';
+};
+
+$('start').onclick=()=>{
+ buildVehicle();
+ buildWorld();
+ resetTraffic();
+
+ velocity=0;
+ points=0;
+ playing=true;
+
+ $('garage').style.display='none';
+ $('controls').style.display='flex';
+ $('tools').style.display='flex';
+ $('hint').style.display='block';
+};
+
+initButtons();
+buildVehicle();
+buildWorld();
+
+const clock=new THREE.Clock();
+
+function animate(){
+ requestAnimationFrame(animate);
+
+ let dt=Math.min(clock.getDelta(),.04);
+
+ if(playing&&car){
+
+  let max=17*power;
+
+  if(keys.forward){
+   velocity=Math.min(max,velocity+12*dt);
+  }
+  else if(keys.reverse){
+   velocity=Math.max(-max*.55,velocity-12*dt);
+  }
+  else{
+   velocity*=Math.pow(.985,dt*60);
+  }
+
+  if(Math.abs(velocity)<.04)velocity=0;
+
+  car.position.z-=velocity*dt;
+
+  let steer=(keys.left?1:0)-(keys.right?1:0);
+
+  car.position.x=THREE.MathUtils.clamp(
+   car.position.x+steer*(3.2+Math.abs(velocity)*.12)*dt,
+   -3.35,3.35
+  );
+
+  wheels.forEach(w=>{
+   w.group.rotation.x-=velocity*dt/(w.radius*wheelSize);
+  });
+
+  if(traffic.length<7){
+   spawn(car.position.z-110);
+  }
+
+  for(let i=traffic.length-1;i>=0;i--){
+   let o=traffic[i];
+
+   if(
+    Math.abs(o.position.z-car.position.z)<2 &&
+    Math.abs(o.position.x-car.position.x)<1.3
+   ){
+    velocity*=.25;
+    $('msg').textContent='💥 धडक!';
+    setTimeout(()=>$('msg').textContent='',600);
+   }
+
+   if(o.position.z>car.position.z+15){
+    scene.remove(o);
+    traffic.splice(i,1);
+    points+=10;
+   }
+  }
+
+  $('score').textContent=points;
+  $('spd').textContent=Math.round(Math.abs(velocity)*5);
+
+  if(cameraMode==='cabin'){
+   camera.position.set(
+    car.position.x,2.2,
+    car.position.z+(rearView?-1:-.7)
+   );
+
+   camera.lookAt(
+    car.position.x,1.5,
+    car.position.z+(rearView?9:-12)
+   );
+  }
+  else{
+   let zdir=rearView?-1:1;
+
+   camera.position.lerp(
+    new THREE.Vector3(
+     car.position.x,5.2,
+     car.position.z+zdir*10
+    ),.13
+   );
+
+   camera.lookAt(
+    car.position.x,1.1,car.position.z
+   );
+  }
+ }
+ else if(car){
+  camera.position.lerp(new THREE.Vector3(7,7,10),.04);
+  camera.lookAt(0,1,0);
+ }
+
+ renderer.render(scene,camera);
+}
+
+animate();
+
+addEventListener('resize',()=>{
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
+});
+</script>
+</body>
+</html>
